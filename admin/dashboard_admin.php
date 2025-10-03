@@ -1,4 +1,5 @@
 <?php
+ob_start(); // <-- Menyalakan output buffering
 session_start();
 include '../koneksi.php';
 
@@ -8,9 +9,15 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-
 $id = $_SESSION['admin_id'];
 $email = $_SESSION['admin_email'];
+
+// Hitung jumlah admin dan kategori untuk card dashboard
+$result_admin = mysqli_query($conn, "SELECT COUNT(*) AS total_admin FROM admin");
+$total_admin = mysqli_fetch_assoc($result_admin)['total_admin'];
+
+$result_kategori = mysqli_query($conn, "SELECT COUNT(*) AS total_kategori FROM kategori");
+$total_kategori = mysqli_fetch_assoc($result_kategori)['total_kategori'];
 
 // Proses update profil
 if (isset($_POST['update_profile'])) {
@@ -58,9 +65,7 @@ if (isset($_POST['update_profile'])) {
       transition: all 0.3s ease;
       z-index: 1000;
     }
-
     .sidebar.active { left: 0; }
-
     .sidebar h2 {
       text-align: center;
       padding: 1.4rem;
@@ -70,10 +75,8 @@ if (isset($_POST['update_profile'])) {
       margin: 0;
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
     .sidebar ul { list-style: none; padding: 0; margin-top: 1.8rem; }
     .sidebar ul li { margin: 10px 15px; }
-
     .sidebar ul li a {
       display: flex;
       align-items: center;
@@ -85,7 +88,6 @@ if (isset($_POST['update_profile'])) {
       font-size: 1rem;
       transition: all 0.3s ease;
     }
-
     .sidebar ul li a i {
       font-size: 1.3rem;
       width: 25px;
@@ -93,14 +95,12 @@ if (isset($_POST['update_profile'])) {
       color: #9ca3af;
       transition: color 0.3s;
     }
-
     .sidebar ul li a:hover {
       background: linear-gradient(90deg, #3b82f6, #2563eb);
       color: #fff;
       transform: translateX(6px);
       box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
     }
-
     .sidebar ul li a:hover i { color: #f9fafb; }
 
     /* === TOGGLE === */
@@ -118,7 +118,6 @@ if (isset($_POST['update_profile'])) {
       z-index: 1100;
       transition: all 0.3s ease;
     }
-
     .menu-toggle:hover {
       background: #3b82f6;
       color: #fff;
@@ -131,7 +130,6 @@ if (isset($_POST['update_profile'])) {
       margin-left: 0;
       transition: margin-left 0.3s ease;
     }
-
     .sidebar.active ~ .content {
       margin-left: 260px;
     }
@@ -142,10 +140,10 @@ if (isset($_POST['update_profile'])) {
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
     }
 
     h1, h2 { color: #1f2937; }
-
     .welcome {
       font-size: 1.3rem;
       color: #374151;
@@ -183,7 +181,6 @@ if (isset($_POST['update_profile'])) {
       font-weight: 600;
       transition: all 0.3s ease;
     }
-
     button:hover {
       background: linear-gradient(90deg, #2563eb, #1d4ed8);
       transform: scale(1.04);
@@ -198,6 +195,28 @@ if (isset($_POST['update_profile'])) {
       font-weight: 500;
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
     }
+
+    /* === DASHBOARD CARDS INLINE === */
+    .dashboard-cards {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .dashboard-cards .card {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+    }
+    .dashboard-cards .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+    .dashboard-cards .card p {
+      font-size: 1.2rem;
+      color: #374151;
+    }
   </style>
 </head>
 <body>
@@ -209,12 +228,11 @@ if (isset($_POST['update_profile'])) {
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <h2>Admin Panel</h2>
+    <h2>Admin!</h2>
     <ul>
-      <li><a href="?dashboard_admin.php"><i class="fas fa-home"></i> Dashboard</a></li>
-      <li><a href="?page=profile"><i class="fas fa-user"></i> Profile</a></li>
-      <li><a href="kelola_kategori.php"><i class="fas fa-list"></i> Kelola Kategori</a></li>
-      <li><a href="kelola_admin.php"><i class="fas fa-user-shield"></i> Kelola Admin</a></li>
+      <li><a href="?page=dashboard"><i class="fas fa-home"></i> Beranda</a></li>
+      <li><a href="?page=kategori"><i class="fas fa-list"></i> Kelola Kategori</a></li>
+      <li><a href="?page=admin"><i class="fas fa-user-shield"></i> Kelola Admin</a></li>
       <li><a href="logout_admin.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
     </ul>
   </div>
@@ -227,11 +245,23 @@ if (isset($_POST['update_profile'])) {
 
       switch($page) {
         case 'dashboard':
-          echo "<h1>Selamat Datang 👋</h1>
+          echo "<h1>Hi, Selamat Datang 👋</h1>
                 <p class='welcome'>Halo, <b>" . htmlspecialchars($email) . "</b>!</p>
                 <p>Selamat datang di <b>Dashboard Admin Kebudayaan Kalimantan</b>. 
                 Di sini kamu dapat mengelola data kategori budaya, mengatur akun admin, dan memperbarui profil. 
                 Gunakan menu di samping untuk memulai pengelolaan data.</p>";
+
+          // Tambahkan card dashboard
+          echo "<div class='dashboard-cards'>
+                  <div class='card'>
+                    <h3>Total Admin</h3>
+                    <p>{$total_admin}</p>
+                  </div>
+                  <div class='card'>
+                    <h3>Total Kategori</h3>
+                    <p>{$total_kategori}</p>
+                  </div>
+                </div>";
           break;
 
         case 'profile':
@@ -285,4 +315,7 @@ if (isset($_POST['update_profile'])) {
   </script>
 
 </body>
+<?php
+ob_end_flush(); // <-- Mengirim buffer ke browser
+?>
 </html>

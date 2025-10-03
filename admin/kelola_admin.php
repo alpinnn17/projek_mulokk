@@ -156,7 +156,6 @@ $admins_result = mysqli_query($conn, $admins_query);
   <h2>Menu</h2>
   <ul>
     <li><a href="Dashboard_admin.php"><i class="fas fa-home"></i> Beranda</a></li>
-    <li><a href="profil_admin.php"><i class="fas fa-user"></i> Profile</a></li>
     <li><a href="kelola_admin.php"><i class="fas fa-user-shield"></i> Kelola Admin</a></li>
     <li><a href="kelola_kategori.php"><i class="fas fa-list"></i> Kelola Kategori</a></li>
     <li><a href="Dashboard_admin.php?logout=true"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
