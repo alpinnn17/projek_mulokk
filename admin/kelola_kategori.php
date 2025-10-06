@@ -21,7 +21,6 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <title>Kelola Kategori</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-<style>
   body{margin:0;font-family:'Segoe UI',sans-serif;background:#f4f6f9;}
  .sidebar {
       position: fixed;
@@ -30,14 +29,12 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
       width: 260px;
       height: 100%;
       background: linear-gradient(180deg, #1f2937, #111827);
-      color: #f9fafb;
+      color: #1f2937;
       box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
       transition: all 0.3s ease;
       z-index: 1000;
     }
-
     .sidebar.active { left: 0; }
-
     .sidebar h2 {
       text-align: center;
       padding: 1.4rem;
@@ -47,10 +44,8 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
       margin: 0;
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
     .sidebar ul { list-style: none; padding: 0; margin-top: 1.8rem; }
     .sidebar ul li { margin: 10px 15px; }
-
     .sidebar ul li a {
       display: flex;
       align-items: center;
@@ -62,7 +57,6 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
       font-size: 1rem;
       transition: all 0.3s ease;
     }
-
     .sidebar ul li a i {
       font-size: 1.3rem;
       width: 25px;
@@ -70,20 +64,15 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
       color: #9ca3af;
       transition: color 0.3s;
     }
-
     .sidebar ul li a:hover {
       background: linear-gradient(90deg, #3b82f6, #2563eb);
       color: #fff;
       transform: translateX(6px);
       box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
     }
-
     .sidebar ul li a:hover i { color: #f9fafb; }
-    .menu-toggle {
-      position: fixed; top: 15px; left: 15px; font-size: 24px;
-      color: #73945bff; cursor: pointer; z-index: 1100;
-    }
 
+    /* === TOGGLE === */
     .menu-toggle {
       position: fixed;
       top: 18px;
@@ -98,11 +87,20 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
       z-index: 1100;
       transition: all 0.3s ease;
     }
-
     .menu-toggle:hover {
       background: #3b82f6;
       color: #fff;
       transform: rotate(90deg);
+    }
+
+    /* === CONTENT === */
+    .content {
+      padding: 2rem;
+      margin-left: 0;
+      transition: margin-left 0.3s ease;
+    }
+    .sidebar.active ~ .content {
+      margin-left: 260px;
     }
 
 /* ===== CARD ===== */
@@ -204,8 +202,6 @@ input[type="text"] {
     box-shadow: 0 8px 25px rgba(59,130,246,0.5);
     background: linear-gradient(45deg, #2563eb, #1e40af);
 }
-
-</style>
 </style>
 </head>
 <body>
@@ -213,13 +209,12 @@ input[type="text"] {
 <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
 
 <div class="sidebar" id="sidebar">
-  <h2>Menu</h2>
+  <h2>Admin!</h2>
   <ul>
     <li><a href="Dashboard_admin.php"><i class="fas fa-home"></i> Beranda</a></li>
-
-    <li><a href="kelola_admin.php"><i class="fas fa-user-shield"></i> Kelola Admin</a></li>
     <li><a href="kelola_kategori.php"><i class="fas fa-list"></i> Kelola Kategori</a></li>
-    <li><a href="Dashboard_admin.php?logout=true"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    <li><a href="kelola_admin.php"><i class="fas fa-user-shield"></i> Kelola Admin</a></li>
+    <li><a href="logout_admin.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
   </ul>
 </div>
 
